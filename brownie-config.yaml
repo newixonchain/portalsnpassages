@@ -1,0 +1,34 @@
+# exclude SafeMath when calculating test coverage
+# https://eth-brownie.readthedocs.io/en/v1.10.3/config.html#exclude_paths
+reports:
+  exclude_contracts:
+    - SafeMath
+dependencies:
+  - OpenZeppelin/openzeppelin-contracts@4.5.0
+compiler:
+  solc:
+    remappings:
+      - "@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.5.0"
+# automatically fetch contract sources from Etherscan
+autofetch_sources: True
+dotenv: .env
+# set a custom mnemonic for the development network
+networks:
+  default: development
+  development:
+    cmd_settings:
+        unlock:
+  ganache:
+    verify: False
+  kovan:
+    verify: True
+  rinkeby:
+    fee: 100000000000000000
+  hardhat:
+    verify: False
+  mainnet:
+    verify: True
+wallets:
+  from_key: ${PRIVATE_KEY}
+  from_mnemonic: ${MNEMONIC}
+  # You'd have to change the accounts.add to accounts.from_mnemonic to use from_mnemonic
