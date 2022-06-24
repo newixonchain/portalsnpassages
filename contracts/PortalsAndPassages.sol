@@ -16,7 +16,6 @@ getGem(uint256 tokenId) - Returns ...
 getNumFacets(uint256 tokenId) - Returns ...
 getNumAncientImprints(uint256 tokenId) - Returns ...
 getLocation(uint256 tokenId) - Returns ...
-getEnvironment(uint256 tokenId) - Returns a uint256 between 0->5 representing the environment in which the portal is located.
 getType(uint256 tokenId) - Returns ...
 getName(uint256 tokenId) - Returns a string with the portal name. Names may be repeated across portals.
 getSvg(uint256 tokenId) - Returns a base64 encrypted svg with a visual representation of the portal.
@@ -42,17 +41,11 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import {IPortals} from "../interfaces/IPortals.sol";
 
 interface CryptsAndCavernsInterface {
-    function getEnvironment(uint256 tokenId)
-        public
-        view
-        override
-        returns (uint8);
+    function ownerOf(uint256 tokenId) external view returns (address owner);
+}
 
-    function getName(uint256 tokenId)
-        public
-        view
-        override
-        returns (string memory);
+interface RealmsInterface {
+    function ownerOf(uint256 tokenId) external view returns (address owner);
 }
 
 contract PortalsAndPassages is
@@ -70,15 +63,17 @@ contract PortalsAndPassages is
     using Counters for Counters.Counter;
 
     // Contracts
-    CryptsAndCavernsInterface cncContract =
+    CryptsAndCavernsInterface internal cncContract =
         CryptsAndCavernsInterface(0x86f7692569914b5060ef39aab99e62ec96a6ed45);
+    RealmsInterface internal realmsContract =
+        RealmsInterface(0x7afe30cb3e53dba6801aa0ea647a0ecea7cbe18d);
     IPortalsSeeder public seeder;
 
     // Project info
-    uint16 public constant TOTAL_PUBLIC_SUPPLY = 5480;
-    uint16 public constant TOTAL_SUPPLY = 5680;
-    uint256 public constant MINT_PRICE = 0.04 ether;
-    uint8 public constant MAX_MINT_PER_TRANSACTION = 10;
+    uint16 public constant TOTAL_PUBLIC_SUPPLY = 966;
+    uint16 public constant TOTAL_SUPPLY = 999;
+    uint256 public constant MINT_PRICE = 0.05 ether;
+    uint8 public constant MAX_MINT_PER_TRANSACTION = 20;
 
     // Royalty
     uint256 public royaltyPercentage;
@@ -138,7 +133,7 @@ contract PortalsAndPassages is
     );
     error NotEnoughSupplyLeft(uint16 _amountToMint, uint16 _supplyLeft);
 
-    // Min
+    // Mint
     error ArraysLengthsMustBeEqual(
         uint8 _amount,
         uint8 _ecosystemIdArray,
@@ -285,7 +280,7 @@ contract PortalsAndPassages is
     }
 
     /**
-     * @dev Allow a user to change the location of its portal.
+     * @dev Allow a user to change the location of their portal.
      *      e.g. changeLocation(1337, 3, 42)
      */
     function changeLocation(
@@ -449,19 +444,6 @@ contract PortalsAndPassages is
      * Example: uint256 numImprints = 2;
      */
     function getNumAncientImprints(uint16 _tokenId)
-        public
-        view
-        override
-        returns (uint8)
-    {
-        isValid(_tokenId);
-    }
-
-    /**
-     * @dev Returns the id of the environment which the Portal takes place in
-     * Example: uint256 environmentId = 4;
-     */
-    function getEnvironment(uint16 _tokenId)
         public
         view
         override

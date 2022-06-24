@@ -9,7 +9,15 @@ Description to be written
 Description to be written
 
 // To do
-- ...
+- isLegendary?
+- getEnchantmentLineage: 4 per attunement, so 60 - 30 - 8 - 2 gives 30 - 15 - 4 - 1 global
+- getEnchantmentGem: 28 gems with rarity enforced... avg 3,6 -> see excel 
+- getNbFacets: 1 to 3 -> 66 - 28 - 6
+- getNbAncientImprints: 0 to 5 -> 40 - 25 - 15 - 10 - 7 - 3
+- getType: 50/50
+- getName
+    - getArtefact: uniform
+    - getGreatness -> prefix, suffix
 
 
 */

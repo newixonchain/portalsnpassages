@@ -5,6 +5,11 @@
 pragma solidity ^0.8.0;
 
 interface PortalsInterface {
+    enum SalePhase {
+        NotOpen,
+        PreSale,
+        PublicSale
+    }
     struct Ecosystem {
         string name;
         uint16 minTokenId;
@@ -14,11 +19,6 @@ interface PortalsInterface {
     struct PortalLocationsStore {
         uint8 currentEcosystemId;
         mapping(uint8 => uint16) locationMapping; // Maps each ecosystemId to the Portal locationId in this ecosystem
-    }
-    enum SalePhase {
-        NotOpen,
-        PreSale,
-        PublicSale
     }
 
     // Mint
@@ -64,17 +64,14 @@ interface PortalsInterface {
     // API
     function tokenURI(uint16 tokenId) external view returns (string memory);
 
-    function getLocation(uint16 tokenId) public view returns (uint8, uint16);
+    function getLocation(uint16 tokenId) external view returns (uint8, uint16);
 
     // Admin
     function setRoyalty(uint256 percentage, address receiver) external;
 
-    function royaltyInfo(uint16 tokenId, uint256 salePrice)
-        external
-        view
-        override;
+    function royaltyInfo(uint16 tokenId, uint256 salePrice) external view;
 
     function withdraw(address payable recipient) external;
 
-    function deposit() public payable;
+    function deposit() external payable;
 }
